@@ -47,8 +47,16 @@ export const login = async (req, res) => {
     try {
         const { userName, password } = req.body;
         const existingUser = await User.findOne({ userName });
-        const isPassword = await bcrypt.compare(password, existingUser.password || "") // if user not exist so no password found
-        if (!existingUser || !isPassword) return res.status(400).json({ error: "Incorrect username or password" });
+
+        if (!existingUser) {
+            return res.status(400).json({ error: "Incorrect username or password" });
+        }
+
+        const isPassword = await bcrypt.compare(password, existingUser.password);
+
+        if (!isPassword) {
+            return res.status(400).json({ error: "Incorrect username or password" });
+        }
 
         generateJwtAndSetCookies(existingUser._id, res)
         res.status(201).json({
@@ -58,16 +66,16 @@ export const login = async (req, res) => {
             profilePic: existingUser.profilePic
         })
     } catch (err) {
-        console.log("Error in signup controller",err)
+        console.log("Error in signup controller", err)
         res.status(500).json({ error: "Internal Server Error" })
     }
 }
 export const logout = (req, res) => {
-    try{
-        res.cookie("jwt","",{maxAge:0})
-        res.status(200).json({message: "Logout successfully"})
-    }catch(err){
-        console.log("Error in logout controller",err)
+    try {
+        res.cookie("jwt", "", { maxAge: 0 })
+        res.status(200).json({ message: "Logout successfully" })
+    } catch (err) {
+        console.log("Error in logout controller", err)
         res.status(500).json({ error: "Internal Server Error" })
     }
 }

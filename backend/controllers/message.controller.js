@@ -1,64 +1,66 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
 
+// Send Message Controller
 export const sendMessage = async (req, res) => {
-    try {
-        const { message } = req.body;
-        const { id: receiverId } = req.params;
-        const senderId = req.user._id
+  try {
+    const { message } = req.body;
+    const { id: receiverId } = req.params;
+    const senderId = req.user._id;
 
-        let conversation = await Conversation.findOne({
-            participants: { $all: [senderId, receiverId] },
-        })
+    let conversation = await Conversation.findOne({
+      participants: { $all: [senderId, receiverId] },
+    });
 
-        if (!conversation) {            
-            conversation = await Conversation.create({
-                participants: [senderId, receiverId],
-            })
-        }
-        console.log({ receiverId, senderId, conversation });
-
-        const newMessage = new Message({
-            senderId,
-            receiverId,
-            message,
-        })
-
-        if (newMessage) {
-            conversation.messages.push(newMessage._id)
-        }
-        // await conversation.save();
-        // await newMessage.save();
-
-        await Promise.all([
-            conversation.save(),
-            newMessage.save()
-          ]);
-          
-        res.status(200).send({ message: "Message send successfully" })
-    } catch (err) {
-        console.log("Error in send message controller");
-        res.status(500).send({ error: "Internal server error" })
-
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [senderId, receiverId],
+      });
     }
 
-}
+    console.log({ receiverId, senderId, conversation });
 
+    const newMessage = new Message({
+      senderId,
+      receiverId,
+      message,
+    });
+
+    if (newMessage) {
+      conversation.messages.push(newMessage._id);
+    }
+
+    await Promise.all([conversation.save(), newMessage.save()]);
+
+   return res.status(200).json(newMessage);
+  } catch (err) {
+    console.error("Error in send message controller", err);
+    if (!res.headersSent) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};
+
+// Get Messages Controller
 export const getMessage = async (req, res) => {
-    try {
-        const {id: userToChatId} = req.params
-        const senderId = req.user._id;
+  try {
+    const { id: userToChatId } = req.params;
+    const senderId = req.user._id;
 
-        const conversation = await Conversation.findOne({
-            participants:{$all: [senderId,userToChatId]}
-        }).populate("messages")  // not reference but actual messages
+    const conversation = await Conversation.findOne({
+      participants: { $all: [senderId, userToChatId] },
+    }).populate("messages");
 
-        if(!conversation) res.status(400).json([])
-        const messages= conversation.messages
-        res.status(200).json(messages)
-    } catch (err) {
-        console.log("Error in receiving message controller");
-        res.status(500).send({ error: "Internal server error" })
+    if (!conversation) {
+      return res.status(200).json([]); // empty array if no conversation exists
     }
 
-}
+    const messages = conversation.messages;
+    return res.status(200).json(messages);
+  } catch (err) {
+    console.error("Error in receiving message controller", err);
+    if (!res.headersSent) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+};

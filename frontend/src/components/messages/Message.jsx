@@ -1,19 +1,47 @@
-import React from 'react'
+import React from 'react';
+import { useAuthContext } from "../../context/authContext";
+import useConversation from '../../zustand/useConversation';
 
-const Message = () => {
+const Message = ({ message }) => {
+  const { authUser } = useAuthContext();
+  const { selectedConversation } = useConversation();
+
+  const fromMe = message.senderId === authUser._id;
+  const profilePic = fromMe ? authUser?.profilePic : selectedConversation?.profilePic;
+
   return (
-    <>
-    <div className='flex justify-end items-center gap-2'>
-      {/* chat   */}
-      <div className='flex flex-row justify-between gap-4 my-2'>
-        <div className=' bg-amber-300 px-4'>Hello how are u?</div> 
-        <div className='bg-amber-700 w-8 h-8 rounded-full justify-center items-center'>U</div>
-      </div>
-      <div> 3:20</div>
-      {/* chat from my end */}
-    </div>
-    </>
-  )
-}
+    <div className={`flex flex-col my-2 ${fromMe ? 'items-end' : 'items-start'}`}>
+      <div className="flex items-end gap-2">
+        {!fromMe && (
+          <img
+            src={profilePic}
+            className="w-8 h-8 rounded-full object-cover"
+            alt="profile"
+          />
+        )}
 
-export default Message
+        <div className={`flex flex-col ${fromMe ? 'items-end' : 'items-start'}`}>
+          <div className={`px-4 py-2 rounded-lg max-w-xs ${fromMe ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
+            {message.message}
+          </div>
+          <span className="text-xs text-gray-500 mt-1">
+            {new Date(message.createdAt).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </span>
+        </div>
+
+        {fromMe && (
+          <img
+            src={profilePic}
+            className="w-8 h-8 rounded-full object-cover"
+            alt="profile"
+          />
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Message;

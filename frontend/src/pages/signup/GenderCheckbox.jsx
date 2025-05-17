@@ -1,15 +1,15 @@
 import React from 'react'
 
-const GenderCheckbox = () => {
+const GenderCheckbox = ({onCheckboxChange,selectedGender}) => {
     return (
         <div>
             <div>
-                <label>male</label>
-                <input type='checkbox'/>
+                <label className= {`${selectedGender === 'male' ? "selected": ""}`}>male</label>
+                <input type='checkbox' checked={selectedGender==='male'} onChange={()=>onCheckboxChange("male")}/>
             </div>
             <div>
-                <label>female</label>
-                <input type='checkbox'/>
+                <label className= {`${selectedGender === 'female' ? "selected": ""}`}>female</label>
+                <input type='checkbox'checked={selectedGender==='female'} onChange={()=>onCheckboxChange("female")}/>
             </div>
         </div>
     )
