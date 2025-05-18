@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAuthContext } from '../context/authContext'
 
-const useLogin = () => {
+const useLogIn = () => {
   const [isLoading, setIsLoading] = useState(false)
   const { setAuthUser } = useAuthContext()
 
@@ -33,7 +33,7 @@ const useLogin = () => {
   return { isLoading, login }
 }
 
-export default useLogin
+export default useLogIn
 
 function handleInputErrors({ userName, password }) {
   if (!userName || !password) {

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAuthContext } from '../context/authContext'
 
-const useLogout = () => {
+const useLogOut = () => {
   const [isLoading, setIsLoading] = useState(false)
       const { setAuthUser } = useAuthContext()
     
@@ -28,4 +28,4 @@ const useLogout = () => {
   return {isLoading,logout }
 }
 
-export default useLogout
+export default useLogOut
