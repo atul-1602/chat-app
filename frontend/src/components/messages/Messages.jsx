@@ -1,10 +1,12 @@
 import React, { useRef, useEffect } from 'react'
 import Message from './Message'
 import useGetMessages from '../../hooks/useGetMessages'
+import useListenMessage from '../../hooks/useListenMessages'
 
 const Messages = () => {
   const { messages, loading } = useGetMessages()
   const lastMsgRef = useRef()
+  useListenMessage()
   useEffect(() => {
     setTimeout(() => {
       lastMsgRef.current?.scrollIntoView({ behaviour: "smooth" })

@@ -9,7 +9,6 @@ const MessageInput = () => {
     e.preventDefault()
     if (!message.trim()) return
 
-    console.log('debug', message)
     await sendMessage(message)
     setMessage('')
   }
