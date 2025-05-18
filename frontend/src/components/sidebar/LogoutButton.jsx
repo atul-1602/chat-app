@@ -1,5 +1,5 @@
 import React from 'react';
-import useLogout from '../../hooks/useLogout';
+import useLogout from '../../hooks/useLogOut';
 
 const LogoutButton = () => {
   const { isLoading, logout } = useLogout();
