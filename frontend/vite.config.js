@@ -18,6 +18,7 @@ export default defineConfig({
 		outDir: 'dist',
 		sourcemap: false,
 		minify: 'esbuild',
+		target: 'es2015',
 		rollupOptions: {
 			output: {
 				manualChunks: {
@@ -26,5 +27,13 @@ export default defineConfig({
 				},
 			},
 		},
+		// Fix for Vercel build issues
+		commonjsOptions: {
+			include: [/node_modules/],
+		},
+	},
+	// Optimize for Vercel
+	optimizeDeps: {
+		include: ['react', 'react-dom', 'react-router-dom'],
 	},
 });

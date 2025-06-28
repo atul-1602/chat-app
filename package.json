@@ -9,7 +9,7 @@
     "build:frontend": "cd frontend && npm run build",
     "build:full": "npm install && npm run build:frontend",
     "test": "echo \"No tests specified\" && exit 0",
-    "vercel-build": "npm run build:full"
+    "vercel-build": "npm install && cd frontend && npm install --legacy-peer-deps && npm run build"
   },
   "keywords": ["chat", "vercel", "express", "react"],
   "author": "",
