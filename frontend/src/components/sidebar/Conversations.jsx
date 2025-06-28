@@ -29,7 +29,7 @@ const Conversations = () => {
   }
 
   return (
-    <div className='space-y-1 px-4'>
+    <div className='space-y-1 px-4 pb-2'>
       {conversations.map((conversation, index) => (
         <div 
           key={conversation._id}
