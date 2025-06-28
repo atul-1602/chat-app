@@ -6,16 +6,19 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import { createServer } from "http";
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
+import { initSocket } from "./socket/socket.js";
 
 dotenv.config();
 
 const app = express();
+const server = createServer(app);
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -43,13 +46,17 @@ if (NODE_ENV === 'production') {
 	app.use(morgan('dev'));
 }
 
-// Rate limiting
+// Rate limiting - More lenient for development
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000, // 15 minutes
-	max: 100, // limit each IP to 100 requests per windowMs
+	windowMs: 1 * 60 * 1000, // 1 minute
+	max: NODE_ENV === 'development' ? 1000 : 100, // More requests allowed in development
 	message: 'Too many requests from this IP, please try again later.',
 	standardHeaders: true,
 	legacyHeaders: false,
+	skip: (req) => {
+		// Skip rate limiting for socket connections
+		return req.path.includes('/socket.io/');
+	}
 });
 app.use('/api/', limiter);
 
@@ -57,12 +64,19 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '50mb' }));
 app.use(cookieParser());
 
-// CORS configuration
+// CORS configuration - More permissive for development
 app.use((req, res, next) => {
-	const allowedOrigins = [FRONTEND_URL, 'https://vercel.app', 'https://*.vercel.app'];
+	const allowedOrigins = [
+		FRONTEND_URL, 
+		'http://localhost:3000',
+		'http://localhost:3001', 
+		'http://localhost:3002',
+		'https://vercel.app', 
+		'https://*.vercel.app'
+	];
 	const origin = req.headers.origin;
 	
-	if (allowedOrigins.includes(origin) || origin?.includes('vercel.app')) {
+	if (allowedOrigins.includes(origin) || origin?.includes('vercel.app') || origin?.includes('localhost')) {
 		res.header('Access-Control-Allow-Origin', origin);
 	}
 	
@@ -75,16 +89,6 @@ app.use((req, res, next) => {
 	} else {
 		next();
 	}
-});
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-	res.status(200).json({ 
-		status: 'OK', 
-		timestamp: new Date().toISOString(),
-		environment: NODE_ENV,
-		uptime: process.uptime()
-	});
 });
 
 // API routes
@@ -126,10 +130,12 @@ app.use('*', (req, res) => {
 
 // Only start server if not in Vercel environment
 if (process.env.VERCEL !== '1') {
-	app.listen(PORT, () => {
+	server.listen(PORT, () => {
 		connectToMongoDB();
+		initSocket(server);
 		console.log(`🚀 Server Running on port ${PORT} in ${NODE_ENV} mode`);
 		console.log(`📱 Frontend URL: ${FRONTEND_URL}`);
+		console.log(`🔌 Socket.io initialized`);
 	});
 }
 

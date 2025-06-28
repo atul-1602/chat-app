@@ -10,7 +10,12 @@
     "build:full": "npm install && npm run build:frontend",
     "test": "echo \"No tests specified\" && exit 0"
   },
-  "keywords": ["chat", "vercel", "express", "react"],
+  "keywords": [
+    "chat",
+    "vercel",
+    "express",
+    "react"
+  ],
   "author": "",
   "license": "ISC",
   "type": "module",
@@ -24,6 +29,9 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "node-fetch": "^3.3.2",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1"
   }
 }

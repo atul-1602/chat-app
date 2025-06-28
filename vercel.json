@@ -6,18 +6,6 @@
       "use": "@vercel/node"
     },
     {
-      "src": "api/hello.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/test.js",
-      "use": "@vercel/node"
-    },
-    {
-      "src": "api/debug.js",
-      "use": "@vercel/node"
-    },
-    {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
@@ -26,18 +14,6 @@
     }
   ],
   "routes": [
-    {
-      "src": "/api/debug",
-      "dest": "/api/debug.js"
-    },
-    {
-      "src": "/api/hello",
-      "dest": "/api/hello.js"
-    },
-    {
-      "src": "/api/test",
-      "dest": "/api/test.js"
-    },
     {
       "src": "/api/(.*)",
       "dest": "/api/index.js"

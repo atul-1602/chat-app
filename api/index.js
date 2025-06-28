@@ -6,16 +6,19 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import { createServer } from "http";
 
 import authRoutes from "../backend/routes/auth.routes.js";
 import messageRoutes from "../backend/routes/message.routes.js";
 import userRoutes from "../backend/routes/user.routes.js";
 
 import connectToMongoDB from "../backend/db/connectToMongoDB.js";
+import { initSocket } from "../backend/socket/socket.js";
 
 dotenv.config();
 
 const app = express();
+const server = createServer(app);
 const __dirname = path.resolve();
 const NODE_ENV = process.env.NODE_ENV || 'production';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://vercel.app';
@@ -58,7 +61,7 @@ app.use(cookieParser());
 
 // CORS configuration
 app.use((req, res, next) => {
-  const allowedOrigins = [FRONTEND_URL, 'https://vercel.app', 'https://*.vercel.app'];
+  const allowedOrigins = [FRONTEND_URL, 'https://vercel.app', 'https://*.vercel.app', 'http://localhost:3000'];
   const origin = req.headers.origin;
   
   if (allowedOrigins.includes(origin) || origin?.includes('vercel.app')) {
@@ -76,27 +79,6 @@ app.use((req, res, next) => {
   }
 });
 
-// Test endpoint for debugging
-app.get('/test', (req, res) => {
-  console.log('Test endpoint called');
-  res.status(200).json({ 
-    message: 'API is working!',
-    timestamp: new Date().toISOString(),
-    environment: NODE_ENV
-  });
-});
-
-// Health check endpoint
-app.get('/health', (req, res) => {
-  console.log('Health endpoint called');
-  res.status(200).json({ 
-    status: 'OK', 
-    timestamp: new Date().toISOString(),
-    environment: NODE_ENV,
-    uptime: process.uptime()
-  });
-});
-
 // Connect to MongoDB on first request
 let isConnected = false;
 app.use(async (req, res, next) => {
@@ -111,6 +93,11 @@ app.use(async (req, res, next) => {
   }
   next();
 });
+
+// Initialize socket for local development
+if (NODE_ENV === 'development') {
+  initSocket(server);
+}
 
 // API routes
 app.use("/auth", authRoutes);
