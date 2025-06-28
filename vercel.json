@@ -15,19 +15,12 @@
   ],
   "routes": [
     {
-      "src": "/api/test",
-      "dest": "/api/test.js"
-    },
-    {
       "src": "/api/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/api/$1"
     },
     {
       "src": "/(.*)",
       "dest": "/frontend/dist/index.html"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 } 

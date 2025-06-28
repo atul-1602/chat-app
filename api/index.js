@@ -50,7 +50,7 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use('/api/', limiter);
+app.use('/', limiter);
 
 // Body parsing middleware
 app.use(express.json({ limit: '50mb' }));
@@ -77,7 +77,7 @@ app.use((req, res, next) => {
 });
 
 // Test endpoint for debugging
-app.get('/api/test', (req, res) => {
+app.get('/test', (req, res) => {
   res.status(200).json({ 
     message: 'API is working!',
     timestamp: new Date().toISOString(),
@@ -86,7 +86,7 @@ app.get('/api/test', (req, res) => {
 });
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
@@ -111,9 +111,9 @@ app.use(async (req, res, next) => {
 });
 
 // API routes
-app.use("/api/auth", authRoutes);
-app.use("/api/messages", messageRoutes);
-app.use("/api/users", userRoutes);
+app.use("/auth", authRoutes);
+app.use("/messages", messageRoutes);
+app.use("/users", userRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
