@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react'
 import { io } from 'socket.io-client'
 import { useAuthContext } from './authContext'
+const socketUrl = import.meta.env.VITE_SOCKET_URL;
 
 export const SocketContext = createContext()
 
@@ -19,7 +20,7 @@ export const SocketContextProvider = ({ children }) => {
         if (authUser) {
             console.log('🔌 Connecting socket for user:', authUser._id)
             
-            currentSocket = io('http://localhost:5000', {
+            currentSocket = io(socketUrl, {
                 withCredentials: true,
                 transports: ['websocket', 'polling'],
                 timeout: 20000,

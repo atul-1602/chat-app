@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import useConversation from '../zustand/useConversation'
 import toast from 'react-hot-toast'
-
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const useSendMessage = () => {
   const [loading, setLoading] = useState(false)
   const { selectedConversation, addMessage } = useConversation()
@@ -20,7 +20,7 @@ const useSendMessage = () => {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
       
-      const res = await fetch(`/api/messages/send/${selectedConversation._id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/messages/send/${selectedConversation._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

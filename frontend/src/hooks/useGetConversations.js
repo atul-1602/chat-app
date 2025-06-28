@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useAuthContext } from '../context/authContext'
-
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const useGetConversations = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [conversations, setConversations] = useState([])
@@ -15,7 +15,7 @@ const useGetConversations = () => {
         
         setIsLoading(true)
         try{
-            const res = await fetch("/api/users", {
+            const res = await fetch(`${API_BASE_URL}/api/users`, {
                 credentials: 'include'
             })
             

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import useConversation from '../zustand/useConversation'
 import toast from 'react-hot-toast'
-
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const useGetMessages = () => {
     const [loading, setLoading] = useState(false)
     const [retryCount, setRetryCount] = useState(0)
@@ -22,7 +22,7 @@ const useGetMessages = () => {
             const controller = new AbortController()
             const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
             
-            const res = await fetch(`/api/messages/${selectedConversation._id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/messages/${selectedConversation._id}`, {
                 credentials: 'include',
                 signal: controller.signal
             });
