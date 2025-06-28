@@ -71,11 +71,18 @@ export const login = async (req, res) => {
     }
 }
 export const logout = (req, res) => {
-    try {
-        res.cookie("jwt", "", { maxAge: 0 })
-        res.status(200).json({ message: "Logout successfully" })
-    } catch (err) {
-        console.log("Error in logout controller", err)
-        res.status(500).json({ error: "Internal Server Error" })
-    }
-}
+	try {
+		const isProduction = process.env.NODE_ENV === "production";
+		res.cookie("jwt", "", {
+			maxAge: 0,
+			httpOnly: true,
+			sameSite: isProduction ? "None" : "Lax",
+			secure: isProduction,
+			path: "/"
+		});
+		res.status(200).json({ message: "Logout successfully" });
+	} catch (err) {
+		console.log("Error in logout controller", err);
+		res.status(500).json({ error: "Internal Server Error" });
+	}
+};
