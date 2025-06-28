@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 const connectToMongoDB = async () => {
     try {
-        const mongoUrl = process.env.MONGO_DB_URL;
+        const mongoUrl = process.env.MONGODB_URI || process.env.MONGO_DB_URL;
         
         if (!mongoUrl) {
-            throw new Error('MONGO_DB_URL environment variable is not set');
+            throw new Error('MONGODB_URI environment variable is not set');
         }
 
         console.log('Attempting to connect to MongoDB...');
