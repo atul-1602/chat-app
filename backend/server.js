@@ -12,10 +12,10 @@ import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
-import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
+const app = express();
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -126,7 +126,7 @@ app.use('*', (req, res) => {
 
 // Only start server if not in Vercel environment
 if (process.env.VERCEL !== '1') {
-	server.listen(PORT, () => {
+	app.listen(PORT, () => {
 		connectToMongoDB();
 		console.log(`🚀 Server Running on port ${PORT} in ${NODE_ENV} mode`);
 		console.log(`📱 Frontend URL: ${FRONTEND_URL}`);

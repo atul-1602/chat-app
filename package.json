@@ -1,21 +1,17 @@
 {
   "name": "chatapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple chat application for Vercel deployment",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon backend/dev-server.js",
     "start": "node backend/server.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
-    "dev": "nodemon backend/dev-server.js",
-    "prod": "NODE_ENV=production node backend/server.js",
     "build:frontend": "cd frontend && npm run build",
     "build:full": "npm install && npm run build:frontend",
-    "start:prod": "NODE_ENV=production npm start",
     "test": "echo \"No tests specified\" && exit 0",
     "vercel-build": "npm run build:full"
   },
-  "keywords": [],
+  "keywords": ["chat", "vercel", "express", "react"],
   "author": "",
   "license": "ISC",
   "type": "module",
@@ -29,10 +25,6 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
-    "morgan": "^1.10.0",
-    "socket.io": "^4.8.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
+    "morgan": "^1.10.0"
   }
 }
