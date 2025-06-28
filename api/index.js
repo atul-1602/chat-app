@@ -78,6 +78,7 @@ app.use((req, res, next) => {
 
 // Test endpoint for debugging
 app.get('/test', (req, res) => {
+  console.log('Test endpoint called');
   res.status(200).json({ 
     message: 'API is working!',
     timestamp: new Date().toISOString(),
@@ -87,6 +88,7 @@ app.get('/test', (req, res) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
+  console.log('Health endpoint called');
   res.status(200).json({ 
     status: 'OK', 
     timestamp: new Date().toISOString(),
@@ -132,7 +134,9 @@ app.use((err, req, res, next) => {
 
 // 404 handler
 app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  console.log('404 handler called for:', req.url);
+  res.status(404).json({ error: 'Route not found', url: req.url });
 });
 
+// Export for Vercel serverless
 export default app; 
