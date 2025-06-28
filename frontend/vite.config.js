@@ -9,6 +9,22 @@ export default defineConfig({
 		proxy: {
 			"/api": {
 				target: "http://localhost:5000",
+				changeOrigin: true,
+				secure: false,
+			},
+		},
+	},
+	build: {
+		outDir: 'dist',
+		sourcemap: false,
+		minify: 'esbuild',
+		rollupOptions: {
+			output: {
+				manualChunks: {
+					vendor: ['react', 'react-dom'],
+					router: ['react-router-dom'],
+					socket: ['socket.io-client'],
+				},
 			},
 		},
 	},

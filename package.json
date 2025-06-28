@@ -4,9 +4,16 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon backend/server.js",
+    "server": "nodemon backend/dev-server.js",
     "start": "node backend/server.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "dev": "nodemon backend/dev-server.js",
+    "prod": "NODE_ENV=production node backend/server.js",
+    "build:frontend": "cd frontend && npm run build",
+    "build:full": "npm install && npm run build:frontend",
+    "start:prod": "NODE_ENV=production npm start",
+    "test": "echo \"No tests specified\" && exit 0",
+    "vercel-build": "npm run build:full"
   },
   "keywords": [],
   "author": "",
@@ -14,11 +21,15 @@
   "type": "module",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "compression": "^1.7.4",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^7.3.1",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
+    "morgan": "^1.10.0",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {

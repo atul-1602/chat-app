@@ -19,10 +19,12 @@ export const SocketContextProvider = ({ children }) => {
             return
         }
     
-        const newSocket = io("http://localhost:5000", {
+        const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'
+        const newSocket = io(socketUrl, {
             auth: {
                 userId: authUser._id
-            }
+            },
+            transports: ['websocket', 'polling']
         })
     
         // Store the socket in state
@@ -30,6 +32,10 @@ export const SocketContextProvider = ({ children }) => {
     
         newSocket.on("getOnlineUsers", (users) => {
             setOnlineUsers(users)
+        })
+
+        newSocket.on("connect_error", (error) => {
+            console.error("Socket connection error:", error)
         })
     
         return () => {

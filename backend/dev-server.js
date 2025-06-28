@@ -6,16 +6,18 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import morgan from "morgan";
+import http from 'http';
 
 import authRoutes from "./routes/auth.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import userRoutes from "./routes/user.routes.js";
 
 import connectToMongoDB from "./db/connectToMongoDB.js";
-import { app, server } from "./socket/socket.js";
 
 dotenv.config();
 
+const app = express();
+const server = http.createServer(app);
 const __dirname = path.resolve();
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -77,6 +79,15 @@ app.use((req, res, next) => {
 	}
 });
 
+// Test endpoint for debugging
+app.get('/api/test', (req, res) => {
+	res.status(200).json({ 
+		message: 'API is working!',
+		timestamp: new Date().toISOString(),
+		environment: NODE_ENV
+	});
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
 	res.status(200).json({ 
@@ -92,17 +103,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-// Serve static files in production (for Vercel)
-if (NODE_ENV === 'production') {
-	// For Vercel, static files are served by the platform
-	// This is handled by vercel.json routing
-} else {
-	// Local development
-	app.use(express.static(path.join(__dirname, "/frontend/dist")));
-	app.get("*", (req, res) => {
-		res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
-	});
-}
+// Serve static files in development
+app.use(express.static(path.join(__dirname, "/frontend/dist")));
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -124,14 +129,10 @@ app.use('*', (req, res) => {
 	res.status(404).json({ error: 'Route not found' });
 });
 
-// Only start server if not in Vercel environment
-if (process.env.VERCEL !== '1') {
-	server.listen(PORT, () => {
-		connectToMongoDB();
-		console.log(`🚀 Server Running on port ${PORT} in ${NODE_ENV} mode`);
-		console.log(`📱 Frontend URL: ${FRONTEND_URL}`);
-	});
-}
+server.listen(PORT, () => {
+	connectToMongoDB();
+	console.log(`🚀 Development Server Running on port ${PORT} in ${NODE_ENV} mode`);
+	console.log(`📱 Frontend URL: ${FRONTEND_URL}`);
+});
 
-// Export for Vercel
 export default app; 
