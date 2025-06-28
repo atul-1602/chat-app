@@ -20,7 +20,7 @@ const useSendMessage = () => {
       const controller = new AbortController()
       const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
       
-      const res = await fetch(`${API_BASE_URL}/api/messages/send/${selectedConversation._id}`, {
+      const res = await fetch(`${API_BASE_URL}/messages/send/${selectedConversation._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

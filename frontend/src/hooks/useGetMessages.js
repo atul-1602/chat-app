@@ -22,7 +22,7 @@ const useGetMessages = () => {
             const controller = new AbortController()
             const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
             
-            const res = await fetch(`${API_BASE_URL}/api/messages/${selectedConversation._id}`, {
+            const res = await fetch(`${API_BASE_URL}/messages/${selectedConversation._id}`, {
                 credentials: 'include',
                 signal: controller.signal
             });
@@ -82,7 +82,7 @@ const useGetMessages = () => {
     useEffect(() => {
         console.log('📥 Conversation changed, fetching messages for:', selectedConversation?._id)
         getMessages()
-    }, [selectedConversation?._id]) // Only depend on conversation ID, not the getMessages function
+    }, [getMessages, selectedConversation?._id]) // Only depend on conversation ID, not the getMessages function
     
     return {messages, loading, retry: () => getMessages()}
 }
