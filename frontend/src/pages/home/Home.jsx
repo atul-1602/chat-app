@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Sidebar from '../../components/sidebar/Sidebar'
 import MessageContainer from '../../components/messages/MessageContainer'
+import ErrorBoundary from '../../components/ErrorBoundary'
 
 const Home = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -36,7 +37,9 @@ const Home = () => {
       
       {/* Main Chat Area */}
       <div className='flex-1 bg-gradient-to-br from-slate-800/50 to-purple-900/50 backdrop-blur-sm overflow-hidden'>
-        <MessageContainer/>
+        <ErrorBoundary>
+          <MessageContainer/>
+        </ErrorBoundary>
       </div>
 
       {/* Floating Toggle Button for Mobile */}

@@ -6,7 +6,13 @@ const Message = ({ message }) => {
   const { authUser } = useAuthContext();
   const { selectedConversation } = useConversation();
 
-  const fromMe = message.senderId === authUser._id;
+  // Validate message object
+  if (!message || !message._id) {
+    console.error('❌ Invalid message object:', message);
+    return null;
+  }
+
+  const fromMe = message.senderId?._id === authUser?._id || message.senderId === authUser?._id;
 
   return (
     <div className={`flex ${fromMe ? 'justify-end' : 'justify-start'}`}>
@@ -14,7 +20,7 @@ const Message = ({ message }) => {
         {/* Avatar */}
         {!fromMe && (
           <div className='w-8 h-8 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg flex-shrink-0'>
-            {selectedConversation?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+            {message.senderId?.fullName?.charAt(0)?.toUpperCase() || selectedConversation?.fullName?.charAt(0)?.toUpperCase() || 'U'}
           </div>
         )}
 
@@ -25,15 +31,15 @@ const Message = ({ message }) => {
               ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-br-md' 
               : 'bg-white/20 backdrop-blur-sm text-gray-200 rounded-bl-md border border-white/20'
           }`}>
-            <p className='text-sm leading-relaxed'>{message.message}</p>
+            <p className='text-sm leading-relaxed'>{message.message || 'Message content unavailable'}</p>
           </div>
           
           {/* Time */}
           <div className={`text-xs text-gray-400 mt-1 ${fromMe ? 'text-right' : 'text-left'}`}>
-            {new Date(message.createdAt).toLocaleTimeString([], {
+            {message.createdAt ? new Date(message.createdAt).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
-            })}
+            }) : '--:--'}
           </div>
         </div>
 

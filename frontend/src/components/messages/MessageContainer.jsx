@@ -5,12 +5,17 @@ import useConversation from '../../zustand/useConversation'
 import { useAuthContext } from '../../context/authContext'
 
 const MessageContainer = () => {
-    const {selectedConversation, setSelectedConversation}= useConversation()
+    const {selectedConversation, clearConversation}= useConversation()
 
-    useEffect(()=>{
-        // clean up function 
-        return setSelectedConversation(null);
-    },[setSelectedConversation])
+    console.log('📱 MessageContainer render - selectedConversation:', selectedConversation?._id || 'null')
+    
+    // Add error recovery for invalid conversation state
+    useEffect(() => {
+        if (selectedConversation && !selectedConversation._id) {
+            console.error('❌ Invalid conversation state detected, clearing...')
+            clearConversation()
+        }
+    }, [selectedConversation, clearConversation])
     
   return (
     <div className='h-full flex flex-col overflow-hidden'>

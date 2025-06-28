@@ -4,11 +4,13 @@ import useGetMessages from '../../hooks/useGetMessages'
 import useListenMessage from '../../hooks/useListenMessages'
 
 const Messages = () => {
-  const { messages, loading } = useGetMessages()
+  const { messages, loading, retry } = useGetMessages()
   const lastMsgRef = useRef()
   useListenMessage()
   
   useEffect(() => {
+    console.log('📨 Messages component - messages updated:', messages?.length || 0)
+    console.log('📨 Messages content:', messages)
     setTimeout(() => {
       lastMsgRef.current?.scrollIntoView({ behaviour: "smooth" })
     }, 50);
@@ -25,7 +27,21 @@ const Messages = () => {
     )
   }
 
-  if (!messages || messages.length === 0) {
+  // Handle undefined or null messages
+  if (!messages) {
+    console.log('📨 Messages is null/undefined, showing loading')
+    return (
+      <div className='flex items-center justify-center h-full'>
+        <div className='text-center'>
+          <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4'></div>
+          <p className='text-gray-400'>Loading messages...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (messages.length === 0) {
+    console.log('📨 No messages found, showing empty state')
     return (
       <div className='flex items-center justify-center h-full'>
         <div className='text-center'>
@@ -36,23 +52,38 @@ const Messages = () => {
           </div>
           <p className='text-gray-400 font-medium'>No messages yet</p>
           <p className='text-gray-500 text-sm mt-1'>Send a message to start the conversation</p>
+          <button 
+            onClick={retry}
+            className='mt-4 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm'
+          >
+            Refresh Messages
+          </button>
         </div>
       </div>
     )
   }
 
+  console.log('📨 Rendering', messages.length, 'messages')
   return (
     <div className='flex-1 overflow-y-auto px-6 py-4 space-y-4'>
-      {messages.map((message, index) => (
-        <div 
-          ref={index === messages.length - 1 ? lastMsgRef : null} 
-          key={message._id}
-          className='animate-fadeIn'
-          style={{ animationDelay: `${index * 50}ms` }}
-        >
-          <Message message={message} />
-        </div>
-      ))}
+      {messages.map((message, index) => {
+        // Validate each message before rendering
+        if (!message || !message._id) {
+          console.error('❌ Invalid message in list:', message)
+          return null
+        }
+        
+        return (
+          <div 
+            ref={index === messages.length - 1 ? lastMsgRef : null} 
+            key={message._id || `temp-${index}`}
+            className='animate-fadeIn'
+            style={{ animationDelay: `${index * 50}ms` }}
+          >
+            <Message message={message} />
+          </div>
+        )
+      })}
     </div>
   )
 }
