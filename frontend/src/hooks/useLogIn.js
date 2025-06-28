@@ -14,6 +14,7 @@ const useLogIn = () => {
       const res = await fetch('/api/auth/login', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({ userName, password })
       })
 
@@ -25,7 +26,8 @@ const useLogIn = () => {
       localStorage.setItem('chat-user', JSON.stringify(data))
       setAuthUser(data)
     } catch (err) {
-      toast.error(err.message)
+      console.error("Login error:", err)
+      toast.error(err.message || "Login failed")
     } finally {
       setIsLoading(false)
     }
@@ -37,11 +39,11 @@ export default useLogIn
 
 function handleInputErrors({ userName, password }) {
   if (!userName || !password) {
-    toast.error('please fill all the fields')
+    toast.error('Please fill all the fields')
     return false
   }
   if (password.length < 6) {
-    toast.error("Password must be 6 digit length")
+    toast.error("Password must be at least 6 characters long")
     return false
   }
 

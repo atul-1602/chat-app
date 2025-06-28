@@ -19,7 +19,7 @@ export const SocketContextProvider = ({ children }) => {
             return
         }
     
-        const newSocket = io("https://chat-app-msvy.onrender.com/", {
+        const newSocket = io("http://localhost:5000", {
             auth: {
                 userId: authUser._id
             }

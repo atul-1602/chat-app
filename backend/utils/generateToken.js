@@ -8,8 +8,8 @@ const generateJwtAndSetCookies = (userId, res) =>{
     res.cookie("jwt", token,{
         maxAge: 15*24*60*60*1000,
         httpOnly: true, //prevent XSS attacks CORS
-        sameSite: 'strict',
-        secure: process.env.NODE_ENV !=='development'
+        sameSite: 'lax',
+        secure: false
     })
 }
 

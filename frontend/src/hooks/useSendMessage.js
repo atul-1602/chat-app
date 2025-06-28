@@ -7,6 +7,11 @@ const useSendMessage = () => {
   const { messages, setMessages, selectedConversation } = useConversation()
 
   const sendMessage = async (newMessage) => {
+    if (!selectedConversation?._id) {
+      toast.error("No conversation selected")
+      return
+    }
+
     setLoading(true)
     try {
       const res = await fetch(`/api/messages/send/${selectedConversation._id}`, {
@@ -14,7 +19,8 @@ const useSendMessage = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: newMessage }) // probably you want to send the new message, not whole messages
+        credentials: 'include',
+        body: JSON.stringify({ message: newMessage })
       })
 
       const data = await res.json()
@@ -22,7 +28,8 @@ const useSendMessage = () => {
 
       setMessages([...messages, data])
     } catch (err) {
-      toast.error(err.message || 'Something went wrong')
+      console.error("Send message error:", err)
+      toast.error(err.message || 'Failed to send message')
     } finally {
       setLoading(false)
     }

@@ -7,37 +7,41 @@ const Message = ({ message }) => {
   const { selectedConversation } = useConversation();
 
   const fromMe = message.senderId === authUser._id;
-  const profilePic = fromMe ? authUser?.profilePic : selectedConversation?.profilePic;
 
   return (
-    <div className={`flex flex-col my-2 ${fromMe ? 'items-end' : 'items-start'}`}>
-      <div className="flex items-end gap-2">
+    <div className={`flex ${fromMe ? 'justify-end' : 'justify-start'}`}>
+      <div className={`flex items-end space-x-2 max-w-xs lg:max-w-md ${fromMe ? 'flex-row-reverse space-x-reverse' : ''}`}>
+        {/* Avatar */}
         {!fromMe && (
-          <img
-            src={profilePic}
-            className="w-8 h-8 rounded-full object-cover"
-            alt="profile"
-          />
+          <div className='w-8 h-8 bg-gradient-to-r from-amber-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg flex-shrink-0'>
+            {selectedConversation?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+          </div>
         )}
 
-        <div className={`flex flex-col ${fromMe ? 'items-end' : 'items-start'}`}>
-          <div className={`px-4 py-2 rounded-lg max-w-xs ${fromMe ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
-            {message.message}
+        {/* Message Bubble */}
+        <div className={`relative group ${fromMe ? 'order-1' : 'order-2'}`}>
+          <div className={`px-4 py-2 rounded-2xl shadow-lg ${
+            fromMe 
+              ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-br-md' 
+              : 'bg-white/20 backdrop-blur-sm text-gray-200 rounded-bl-md border border-white/20'
+          }`}>
+            <p className='text-sm leading-relaxed'>{message.message}</p>
           </div>
-          <span className="text-xs text-gray-500 mt-1">
+          
+          {/* Time */}
+          <div className={`text-xs text-gray-400 mt-1 ${fromMe ? 'text-right' : 'text-left'}`}>
             {new Date(message.createdAt).toLocaleTimeString([], {
               hour: '2-digit',
               minute: '2-digit',
             })}
-          </span>
+          </div>
         </div>
 
+        {/* Avatar for own messages */}
         {fromMe && (
-          <img
-            src={profilePic}
-            className="w-8 h-8 rounded-full object-cover"
-            alt="profile"
-          />
+          <div className='w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg flex-shrink-0'>
+            {authUser?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+          </div>
         )}
       </div>
     </div>
