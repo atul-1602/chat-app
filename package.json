@@ -8,8 +8,7 @@
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
     "build:frontend": "cd frontend && npm run build",
     "build:full": "npm install && npm run build:frontend",
-    "test": "echo \"No tests specified\" && exit 0",
-    "vercel-build": "npm install && cd frontend && npm install --legacy-peer-deps && npx vite build"
+    "test": "echo \"No tests specified\" && exit 0"
   },
   "keywords": ["chat", "vercel", "express", "react"],
   "author": "",
