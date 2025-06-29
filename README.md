@@ -1,6 +1,8 @@
 # Chat App
 
 A modern chat application with a stunning glassmorphism UI design. Built with React, Node.js, Express, and MongoDB. Optimized for Vercel deployment.
+<img width="1512" alt="Screenshot 2025-06-28 at 10 48 07 AM" src="https://github.com/user-attachments/assets/e136dc61-0045-45df-9452-5e0e7890b124" />
+
 
 ## 🚀 Features
 
@@ -160,15 +162,6 @@ VITE_API_URL=http://localhost:5000/api
    - Create a new cluster
    - Get your connection string
    - Add it to your environment variables
-
-## 📱 Features
-
-- **User Authentication** - Register, login, and logout
-- **Real-time Messaging** - Send and receive messages
-- **User Management** - View and manage user profiles
-- **Responsive Design** - Works on desktop and mobile
-- **Modern UI** - Beautiful glassmorphism design
-- **Security** - JWT authentication and password hashing
 
 ## 🚀 Deployment
 
