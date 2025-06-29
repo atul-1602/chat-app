@@ -2,6 +2,7 @@
 
 A modern chat application with a stunning glassmorphism UI design. Built with React, Node.js, Express, and MongoDB. Optimized for Vercel deployment.
 <img width="1512" alt="Screenshot 2025-06-28 at 10 48 07 AM" src="https://github.com/user-attachments/assets/e136dc61-0045-45df-9452-5e0e7890b124" />
+<img width="1512" alt="Screenshot 2025-06-28 at 10 49 54 AM" src="https://github.com/user-attachments/assets/3f290452-c734-4b9b-8990-dc9ea4eb51b4" />
 
 
 ## 🚀 Features
